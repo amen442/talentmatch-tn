@@ -1,0 +1,15 @@
+(function(){const $=id=>document.getElementById(id);
+  const F=[['N8N_BASE_URL','URL de base n8n'],['STUDENTS_IMPORT_WEBHOOK','Webhook import étudiants'],['COMPANY_SEARCH_WEBHOOK','Webhook recherche entreprises'],['MATCHING_WEBHOOK','Webhook matching'],['HEALTHCHECK_WEBHOOK','Webhook santé (optionnel)']];
+  $('wh').innerHTML=F.map(([k,l])=>`<label>${l}<input data-k="${k}" value="${U.esc(TM_CONFIG[k])}" placeholder="${k==='N8N_BASE_URL'?'':'placeholder — à créer dans n8n'}"></label>${k==='N8N_BASE_URL'?'':`<div style="align-self:end"><button class="btn" data-t="${k}">Tester</button> <span id="r_${k}" class="small"></span></div>`}`).join('');
+  const persist=()=>{const c={};$('wh').querySelectorAll('input').forEach(i=>c[i.dataset.k]=i.value.trim());c.DOMAINS=TM_CONFIG.DOMAINS;localStorage.setItem('tm_config',JSON.stringify(c));Object.assign(TM_CONFIG,c)};
+  $('save').onclick=()=>{persist();U.toast('Configuration enregistrée.','success')};
+  $('wh').onclick=async e=>{const b=e.target.closest('[data-t]');if(!b)return;persist();const k=b.dataset.t,out=$('r_'+k),key={STUDENTS_IMPORT_WEBHOOK:'import',COMPANY_SEARCH_WEBHOOK:'search',MATCHING_WEBHOOK:'match',HEALTHCHECK_WEBHOOK:'health'}[k],u=N8N.url(key);
+    if(!u){out.textContent='Non configuré';return}out.textContent='Test…';
+    try{const ctl=new AbortController();setTimeout(()=>ctl.abort(),8000);const r=await fetch(u,{method:key==='health'?'GET':'POST',headers:{'Content-Type':'application/json'},body:key==='health'?undefined:JSON.stringify({action:'test',test:true}),signal:ctl.signal});
+      out.textContent=r.ok?'Joignable (HTTP '+r.status+')':'HTTP '+r.status;out.className='small '+(r.ok?'ok':'err')}catch(x){out.textContent='Injoignable / CORS';U.logError('test',k+' : injoignable ou bloqué par CORS');errs()}};
+  const doms=()=>{$('doms').innerHTML=TM_CONFIG.DOMAINS.map((d,i)=>`<div class="filters" style="margin:4px 0"><span style="flex:1">${U.esc(d)}</span><button class="btn" data-x="${i}">Retirer</button></div>`).join('')};
+  $('doms').onclick=e=>{const b=e.target.closest('[data-x]');if(b&&confirm('Retirer ce domaine ?')){TM_CONFIG.DOMAINS.splice(+b.dataset.x,1);persist();doms()}};
+  $('ad').onclick=()=>{const v=$('nd').value.trim();if(!v||TM_CONFIG.DOMAINS.includes(v))return U.toast('Domaine vide ou déjà présent.','error');TM_CONFIG.DOMAINS.push(v);persist();$('nd').value='';doms()};
+  const errs=()=>{let a=[];try{a=JSON.parse(localStorage.getItem('tm_errors')||'[]')}catch(e){}$('errs').innerHTML=a.length?'<div class="list">'+a.map(x=>`<div><b>${U.esc(x.src)}</b> — ${U.esc(x.msg)}<br><span class="muted small">${U.fmtDate(x.at)}</span></div>`).join('')+'</div>':'<p class="muted">Aucune erreur.</p>'};
+  $('ce').onclick=()=>{localStorage.removeItem('tm_errors');errs()};doms();errs();
+})();

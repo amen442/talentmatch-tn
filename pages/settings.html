@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<script>try{var t=localStorage.getItem("tm_theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<title>TalentMatch TN — Paramètres</title><link rel="stylesheet" href="../css/styles.css"><link rel="stylesheet" href="../css/components.css"></head>
+<body data-page="settings" data-root="../">
+<aside class="sidebar" id="sidebar"><div class="brand">Talent<b>Match</b> TN</div><nav id="nav"></nav></aside>
+<div class="main"><header class="topbar"><button class="btn ghost" id="menuBtn" aria-label="Menu">☰</button>
+<input id="globalSearch" type="search" placeholder="Rechercher un étudiant (Entrée)…"><span id="modeBadge" class="badge"></span><span id="n8nStatus" class="badge">n8n : …</span><span class="avatar">AD</span></header>
+<main class="content"><div class="page-head"><h1>Paramètres</h1></div>
+<div class="card" style="margin:14px 0"><h3>Webhooks n8n</h3><p class="muted small">Chemins <b>placeholders</b> : créez les Webhooks dans n8n puis saisissez leur chemin (ex. /webhook/xxx) ou URL complète. Le test envoie <code>{"action":"test","test":true}</code> : faites-le ignorer dans votre workflow.</p><div id="wh" class="form"></div>
+<div class="actions" style="margin-top:12px"><button class="btn primary" id="save">Enregistrer</button></div></div>
+<div class="card" style="margin-bottom:14px"><h3>Domaines</h3><div id="doms"></div><div class="filters" style="margin-top:10px"><input id="nd" placeholder="Nouveau domaine"><button class="btn" id="ad">Ajouter</button></div></div>
+<div class="card"><div class="page-head"><h3>Erreurs d'intégration</h3><button class="btn" id="ce">Effacer</button></div><div id="errs"></div></div>
+</main></div><div id="toasts" class="toasts"></div>
+<script src="../js/config.js"></script><script src="../js/utils.js"></script><script src="../js/dataStore.js"></script>
+<script src="../js/services/n8nService.js"></script><script src="../js/services/studentsService.js"></script><script src="../js/services/companiesService.js"></script><script src="../js/services/matchingService.js"></script>
+<script src="../js/app.js"></script><script src="../js/pages/settings.js"></script></body></html>
